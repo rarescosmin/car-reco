@@ -20,15 +20,17 @@ const useStyles = makeStyles((theme) => ({
 const EvaluateCarPrice = () => {
     const classes = useStyles();
 
+    const [loading, setLoading] = useState(false);
+
     const [price, setPrice] = useState(null);
 
     const [make, setMake] = useState('');
     const [model, setModel] = useState('');
-    const [year, setYear] = useState(0);
-    const [mileage, setMileage] = useState(0);
+    const [year, setYear] = useState('');
+    const [mileage, setMileage] = useState('');
     const [fuelType, setFuelType] = useState('');
-    const [engineCapacity, setEngineCapacity] = useState(0);
-    const [cylinders, setCylinders] = useState(0);
+    const [engineCapacity, setEngineCapacity] = useState('');
+    const [cylinders, setCylinders] = useState('');
 
     const makeChangeHandler = (event) => {
         setMake(event.target.value);
@@ -58,7 +60,7 @@ const EvaluateCarPrice = () => {
         setCylinders(event.target.value);
     }
 
-    const evaluateButtonHandler = () => {
+    const evaluateButtonHandler = async () => {
         const requestBody = {
             'make': make,
             'model': model,
@@ -68,22 +70,35 @@ const EvaluateCarPrice = () => {
             'engineCapacity': engineCapacity,
             'cylinders': cylinders
         }
+        console.log('request body: ', requestBody);
 
-        axios.post('http://localhost:5000/evaluate_price')
+        setLoading(true);
+        const response = await axios.post('http://localhost:5000/evaluate_price', requestBody);
+        const retreivedPrice = String(response.data.price);
+
+        const parsedPrice = retreivedPrice.split('.')
+
+        setLoading(false);
+        setPrice(parsedPrice[0]);
+    }
+
+    const recommendationsButtonHandler = () => {
+
     }
 
     return (
         // <Paper className={classes.root} style={{maxWidth: '60vw', marginLeft: 'auto', marginRight: 'auto', marginTop: '3vh'}}>
             <Grid container spacing={3} style={{maxWidth: '90vw', marginLeft: 'auto', marginRight: 'auto', marginTop: '3vh'}}>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={3} style={{fontWeight: 'bold'}}>Please fill the form below</Paper>
+                    <Paper className={classes.paper} elevation={3} style={{fontWeight: 'bold'}}>
+                        Please fill the form below
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={make}
                                 onChange={makeChangeHandler}
                                 label="Make" 
@@ -92,7 +107,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={model} 
                                 onChange={modelChangeHandler}
                                 label="Model" 
@@ -101,7 +115,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={year}
                                 onChange={yearChangeHandler} 
                                 label="Year"
@@ -110,7 +123,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={mileage}
                                 onChange={mileageChangeHandler} 
                                 label="Mileage"
@@ -119,7 +131,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={fuelType}
                                 onChange={fuelTypeChangeHandler} 
                                 label="Fuel Type"
@@ -128,7 +139,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={engineCapacity}
                                 onChange={engineCapacityChangeHandler} 
                                 label="Engine Capacity"
@@ -137,7 +147,6 @@ const EvaluateCarPrice = () => {
                         <div>
                             <TextField 
                                 size="small" 
-                                id="standard-basic"
                                 value={cylinders}
                                 onChange={cylindersChangeHandler} 
                                 label="Cylinders"
@@ -147,15 +156,24 @@ const EvaluateCarPrice = () => {
                             <Button variant="contained" color="primary" onClick={evaluateButtonHandler}>
                                 EVALUATE
                             </Button>
+                            
                         </div>
                     </Paper>
-                    {
-                        price != null ? 
+                    {   
+                        loading ? 
                             <Paper className={classes.paper}>
-                                Car has been evaluated to: {price} €
-                            </Paper>
+                                Loading.....
+                            </Paper>    
                         :
-                            null
+                            price != null ? 
+                                <Paper className={classes.paper}>
+                                    <p style={{fontWeight: 'bold'}}>Predicted price: {price} €</p>
+                                    <Button variant="contained" color="primary" onClick={recommendationsButtonHandler}>
+                                        CHECK SIMILAR CARS
+                                    </Button>
+                                </Paper>
+                            :
+                                null
 
                     }
                     

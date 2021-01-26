@@ -3,6 +3,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,6 +15,7 @@ import sys
 
 TARGET_COLUMN = 'price'
 app = Flask(__name__)
+CORS(app)
 
 
 # return csv dataframe
@@ -100,11 +102,11 @@ def get_car_predicted_price():
     input_car = {
         'make': request_body['make'],
         'model': request_body['model'],
-        'year': request_body['year'],
-        'mileage': request_body['mileage'],
+        'year': int(request_body['year']),
+        'mileage': int(request_body['mileage']),
         'fuelType': request_body['fuelType'],
-        'engineCapacity': request_body['engineCapacity'],
-        'cylinders': request_body['cylinders']
+        'engineCapacity': int(request_body['engineCapacity']),
+        'cylinders': int(request_body['cylinders'])
     }
 
     raw_dataset = load_csv_data(
