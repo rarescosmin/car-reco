@@ -89,7 +89,7 @@ def hello():
 
 
 
-@app.route('/evaluate_price', methods=['GET'])
+@app.route('/evaluate_price', methods=['POST'])
 def get_car_predicted_price():
     logging.basicConfig(filename='car-predict.log',
                         level=logging.DEBUG, filemode='w')
