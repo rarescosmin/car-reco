@@ -49,17 +49,61 @@ electric          0.000000
 hibrid            0.000000
 Name: 0, Length: 553, dtype: float64 
 
-INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 19:09:32] "[37mPOST /evaluate_price HTTP/1.1[0m" 200 -
-INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 19:09:37] "[37mOPTIONS /get_recommendations HTTP/1.1[0m" 200 -
-ERROR:car-price-predict-server:Exception on /get_recommendations [POST]
-Traceback (most recent call last):
-  File "C:\Users\Rares Zaharescu\AppData\Local\Programs\Python\Python38\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "C:\Users\Rares Zaharescu\AppData\Local\Programs\Python\Python38\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
-    return self.finalize_request(rv)
-  File "C:\Users\Rares Zaharescu\AppData\Local\Programs\Python\Python38\lib\site-packages\flask\app.py", line 1968, in finalize_request
-    response = self.make_response(rv)
-  File "C:\Users\Rares Zaharescu\AppData\Local\Programs\Python\Python38\lib\site-packages\flask\app.py", line 2097, in make_response
-    raise TypeError(
-TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
-INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 19:09:37] "[35m[1mPOST /get_recommendations HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:34:50] "[37mPOST /evaluate_price HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:34:51] "[37mOPTIONS /get_recommendations HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:34:54] "[37mPOST /get_recommendations HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:36:07] "[37mOPTIONS /evaluate_price HTTP/1.1[0m" 200 -
+INFO:root:One Hot Encoding make, model, fueltype columns... 
+DEBUG:root:dataframe columns: 
+ Index(['year', 'mileage', 'engineCapacity', 'cylinders', 'abarth', 'alfa',
+       'aston', 'audi', 'bentley', 'bmw',
+       ...
+       'xsara', 'yaris', 'yeti', 'z4', 'zafira', 'zt', 'benzina', 'diesel',
+       'electric', 'hibrid'],
+      dtype='object', length=553) 
+
+DEBUG:root:encoded dataset row: 
+ year               2019.0
+mileage           19700.0
+engineCapacity      998.0
+cylinders             3.0
+abarth                0.0
+                   ...   
+zt                    0.0
+benzina               1.0
+diesel                0.0
+electric              0.0
+hibrid                0.0
+Name: 0, Length: 553, dtype: float64 
+
+DEBUG:root:input dataset row: 
+ year              0.0
+mileage           0.0
+engineCapacity    0.0
+cylinders         0.0
+abarth            0.0
+                 ... 
+zt                0.0
+benzina           0.0
+diesel            0.0
+electric          0.0
+hibrid            0.0
+Name: 0, Length: 553, dtype: float64 
+
+DEBUG:root:normalized and encoded dataset row: 
+ year              0.854167
+mileage           0.239739
+engineCapacity    0.251102
+cylinders         0.142857
+abarth            0.000000
+                    ...   
+zt                0.000000
+benzina           0.000000
+diesel            1.000000
+electric          0.000000
+hibrid            0.000000
+Name: 0, Length: 553, dtype: float64 
+
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:36:08] "[37mPOST /evaluate_price HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:36:09] "[37mOPTIONS /get_recommendations HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 20:36:11] "[37mPOST /get_recommendations HTTP/1.1[0m" 200 -
