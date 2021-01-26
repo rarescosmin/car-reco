@@ -82,8 +82,18 @@ const EvaluateCarPrice = () => {
         setPrice(parsedPrice[0]);
     }
 
-    const recommendationsButtonHandler = () => {
+    const recommendationsButtonHandler = async () => {
+        const requestBody = {
+            'make': make,
+            'model': model,
+            'year': year,
+            'price': price
+        }
 
+        console.log('request body: ', requestBody)
+
+        const response = await axios.post('http://localhost:5000/get_recommendations', requestBody);
+        console.log('recommendations: ', response);
     }
 
     return (

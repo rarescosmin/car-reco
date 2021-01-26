@@ -2,6 +2,8 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -22,6 +24,37 @@ CORS(app)
 def load_csv_data(path, fieldnames):
     raw_dataset = pd.read_csv(path, names=fieldnames, encoding='latin-1')
     return raw_dataset
+
+# used for car recommendations
+def create_soup(x):
+    return x['make'] + ' ' + x['model'] + ' ' + str(x['year']) + ' ' + str(x['mileage']) + ' ' + str(x['fuelType']) + ' ' + str(x['price'])
+
+
+def create_soup_2(x):
+    return x['make']+ ' ' + x['model'] + ' ' + str(x['year']) + ' ' + str(x['price'])
+
+
+def get_recommendations(metadata, indices, title, cosine_sim):
+    # Get the index of the movie that matches the title
+    idx = indices[title]
+
+    # Get the pairwsie similarity scores of all movies with that movie
+    sim_scores = list(enumerate(cosine_sim[idx]))
+
+    # Sort the movies based on the similarity scores
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+
+    # Get the scores of the 10 most similar movies
+    sim_scores = sim_scores[1:11]
+
+    # Get the movie indices
+    movie_indices = [i[0] for i in sim_scores]
+
+    # Return the top 10 most similar movies
+    return metadata.iloc[movie_indices]   
+
+
+
 
 # one hot encodes features using pandas get_dummies
 def one_hot_encode_categorical_features(dataframe, columns_to_encode):
@@ -78,16 +111,6 @@ def get_min_max_values(dataset):
     print('max price', price_max_value)
     
     return cylinders_min_value, cylinders_max_value, engineCapacity_min_value, engineCapacity_max_value, mileage_min_value, mileage_max_value, year_min_value, year_max_value, price_min_value, price_max_value
-
-
-@app.route('/user', methods=['GET'])
-def hello():
-    body = request.json
-    name = body['name']
-    last_name = body['lastName']
-    print('name: ', name)
-    print('last_name: ', last_name)
-    return jsonify(name=name, lastName=last_name)
 
 
 
@@ -162,6 +185,61 @@ def get_car_predicted_price():
 
     return jsonify(price=prediction[0][0])
 
+
+
+@app.route('/get_recommendations', methods=['POST'])
+def get_similar_cars():
+    request_body = request.json
+    print('Request received with body: ', request_body)
+
+    car = str(request_body['make']) + ' ' + str(request_body['model']) + ' ' + str(request_body['year'])
+
+    raw_dataset = load_csv_data(
+        path='./clean-csv-data/cars_train.csv',
+        fieldnames=['make', 'model', 'year', 'mileage',
+            'fuelType', 'engineCapacity', 'cylinders', 'price']
+    )
+
+    car_price = 0
+    for index, row in raw_dataset.iterrows():
+        if str(row['make']) == str(request_body['make']) and str(row['model']) == str(request_body['model']) and str(row['year']) == str(request_body['year']):
+            car_price = int(row['price'])
+            break
+
+    car = car + ' ' + str(car_price)
+
+    raw_dataset['soup'] = raw_dataset.apply(create_soup, axis=1)
+
+    raw_dataset['soup_2'] = raw_dataset.apply(create_soup_2, axis=1)
+
+    count = CountVectorizer(stop_words='english')
+    count_matrix = count.fit_transform(raw_dataset['soup'])
+
+    cosine_sim = cosine_similarity(count_matrix, count_matrix)
+
+    raw_dataset = raw_dataset.reset_index()
+    indices = pd.Series(raw_dataset.index, index=raw_dataset['soup_2'])
+    
+
+    results = get_recommendations(raw_dataset, indices, car, cosine_sim)
+    parsed_results = results.drop(columns=['index', 'soup', 'soup_2'])
+    print('prased res: ', parsed_results)
+
+    response = []
+    for index, row in parsed_results.iterrows():
+        car_dict = {
+            'make': row['make'],
+            'model': row['model'],
+            'year': row['year'],
+            'mileage': row['mileage'],
+            'fuelType': row['fuelType'],
+            'engineCapacity': row['engineCapacity'],
+            'cylinders': row['cylinders'],
+            'price': row['price']
+        }
+        response.append(car_dict)
+    
+    return jsonify(cars=response)
 
 if __name__ == '__main__':
     app.run()
