@@ -11,7 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Tab } from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -106,22 +106,12 @@ const EvaluateCarPrice = () => {
         console.log('recommendations: ', response.data.cars);
     }
 
-    const similarCarsColumns = [
-        {field: 'make', headerName: 'Make'},
-        {field: 'model', headerName: 'Model'},
-        {field: 'year', headerName: 'Year'},
-        {field: 'mileage', headerName: 'Mileage'},
-        {field: 'fuelType', headerName: 'FuelType'},
-        {field: 'engineCapacity', headerName: 'EngineCapacity'},
-        {field: 'price', headerName: 'Price'}
-    ]
-
     return (
         <Grid container spacing={3} style={{ maxWidth: '90vw', marginLeft: 'auto', marginRight: 'auto', marginTop: '3vh' }}>
             <Grid item xs={12}>
                 <Paper className={classes.paper} elevation={3} style={{ fontWeight: 'bold' }}>
                     Please fill the form below
-                    </Paper>
+                </Paper>
             </Grid>
             <Grid item xs={12}>
                 <Paper className={classes.paper}>
@@ -184,7 +174,7 @@ const EvaluateCarPrice = () => {
                     <div style={{ marginTop: '1vh' }}>
                         <Button variant="contained" color="primary" onClick={evaluateButtonHandler}>
                             EVALUATE
-                            </Button>
+                        </Button>
 
                     </div>
                 </Paper>
@@ -192,18 +182,17 @@ const EvaluateCarPrice = () => {
                     loading ?
                         <Paper className={classes.paper}>
                             Loading.....
-                            </Paper>
-                        :
+                        </Paper>
+                    :
                         price != null ?
                             <Paper className={classes.paper}>
                                 <p style={{ fontWeight: 'bold' }}>Predicted price: {price} €</p>
                                 <Button variant="contained" color="primary" onClick={recommendationsButtonHandler}>
                                     CHECK SIMILAR CARS
-                                    </Button>
+                                </Button>
                             </Paper>
-                            :
+                        :
                             null
-
                 }
             </Grid>
             <Grid item xs={12}>
