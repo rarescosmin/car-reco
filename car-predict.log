@@ -36,9 +36,9 @@ hibrid            0.0
 Name: 0, Length: 553, dtype: float64 
 
 DEBUG:root:normalized and encoded dataset row: 
- year              0.854167
-mileage           0.239739
-engineCapacity    0.251102
+ year              0.875000
+mileage           0.179803
+engineCapacity    0.246851
 cylinders         0.142857
 abarth            0.000000
                     ...   
@@ -49,5 +49,5 @@ electric          0.000000
 hibrid            0.000000
 Name: 0, Length: 553, dtype: float64 
 
-INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 21:35:28] "[37mPOST /evaluate_price HTTP/1.1[0m" 200 -
-INFO:werkzeug:127.0.0.1 - - [26/Jan/2021 21:35:32] "[37mPOST /get_recommendations HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Feb/2021 13:22:40] "[37mPOST /evaluate_price HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Feb/2021 13:22:45] "[37mPOST /get_recommendations HTTP/1.1[0m" 200 -
