@@ -2,6 +2,8 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
+from keras import backend as K
+from keras.losses import mean_squared_error
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from flask import Flask, request, jsonify
@@ -12,12 +14,20 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+
+
 import logging
 import sys
 
 TARGET_COLUMN = 'price'
 app = Flask(__name__)
 CORS(app)
+
+
+def root_mean_squared_error(y_true, y_pred):
+    return K.sqrt(mean_squared_error(y_true, y_pred))
+
+
 
 
 # return csv dataframe
